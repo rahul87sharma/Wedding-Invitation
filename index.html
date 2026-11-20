@@ -665,7 +665,6 @@ With warm regards from<b>The Sharma Family</b>
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -831,51 +830,7 @@ a{color:inherit}
  // Gentle floating rose petals for a subtle celebratory effect.
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(!reduced){const symbols=['✿','❀','🌸'];for(let i=0;i<9;i++){const petal=document.createElement('span');petal.className='petal';petal.textContent=symbols[i%symbols.length];petal.style.left=(Math.random()*100)+'vw';petal.style.animationDuration=(13+Math.random()*13)+'s';petal.style.animationDelay=(-Math.random()*20)+'s';petal.style.setProperty('--drift',((Math.random()*120)-60)+'px');document.body.appendChild(petal);}}
- // Soft ambient music attempts to start automatically. Most mobile browsers block
- // audible autoplay until the visitor makes their first interaction with the page.
- // Start silently in the background where permitted, then unlock on the first tap/key.
- let audioCtx=null, master=null, oscillators=[], musicStarted=false;
- function startMusic(){
-  if(musicStarted)return;
-  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-  if(!AudioContextClass)return;
-  try{
-   audioCtx=new AudioContextClass();
-   master=audioCtx.createGain();
-   master.gain.value=0.0001;
-   master.connect(audioCtx.destination);
-   if(audioCtx.state==='suspended')audioCtx.resume();
-   master.gain.setTargetAtTime(0.035,audioCtx.currentTime,1.8);
-   // Gentle, consonant ambient chord with slow breathing volume.
-   const notes=[261.63,329.63,392.00,493.88];
-   notes.forEach((hz,i)=>{
-    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),lfo=audioCtx.createOscillator(),lfoGain=audioCtx.createGain();
-    osc.type='sine';osc.frequency.value=hz/2;
-    gain.gain.value=[.20,.14,.10,.055][i];
-    lfo.type='sine';lfo.frequency.value=.07+(i*.015);lfoGain.gain.value=.025;
-    lfo.connect(lfoGain);lfoGain.connect(gain.gain);
-    osc.connect(gain);gain.connect(master);osc.start();lfo.start();
-    oscillators.push(osc,lfo);
-   });
-   const bell=audioCtx.createOscillator(),bellGain=audioCtx.createGain();
-   bell.type='sine';bell.frequency.value=523.25;bellGain.gain.value=.012;
-   bell.connect(bellGain);bellGain.connect(master);bell.start();
-   oscillators.push(bell);
-   musicStarted=true;
-  }catch(e){/* Audio remains unavailable if the browser/device blocks it. */}
- }
- // Try autoplay on load; if the browser blocks it, the first natural page tap starts it.
- startMusic();
- const unlockMusic=()=>{
-  if(!musicStarted)startMusic();
-  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
-  window.removeEventListener('pointerdown',unlockMusic);
-  window.removeEventListener('keydown',unlockMusic);
-  window.removeEventListener('touchstart',unlockMusic);
- };
- window.addEventListener('pointerdown',unlockMusic,{once:true,passive:true});
- window.addEventListener('touchstart',unlockMusic,{once:true,passive:true});
- window.addEventListener('keydown',unlockMusic,{once:true});
+
 })();
 </script>
 </body></html>
